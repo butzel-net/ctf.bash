@@ -1,0 +1,6 @@
+#!/bin/bash
+echo $1
+echo "encode:"
+echo -n "$1" | base64 
+echo "decode:"
+echo -n "$1" | base64 -d

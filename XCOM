@@ -1,0 +1,14 @@
+#!/bin/bash
+BAUDRATE=${2:-115200}
+if [ -c /dev/ttyUSB$1 ]; then
+        screen -R serial$1_$BAUDRATE /dev/ttyUSB$1 $BAUDRATE
+elif [ -c /dev/ttyACM$1  ]; then
+        screen -R serial$1_$BAUDRATE /dev/ttyACM$1 $BAUDRATE
+else
+        echo "USAGE: $0 <ttynumber> [baudrade]\n"
+        ls -1 /dev/tty[AU]* 2>/dev/null || echo "no device found"
+        echo -ne "\n\nkill screen with: "  && sleep .1
+        echo -n "[ctrl] + [a] "  && sleep .4
+        echo -n "[shift] + [k] " && sleep .4
+        echo  "[y]" 
+fi

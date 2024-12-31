@@ -1,0 +1,4 @@
+#!/bin/bash
+# Insecure, but usefull for old devices...
+
+SCP -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  $@

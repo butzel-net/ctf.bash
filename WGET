@@ -1,0 +1,3 @@
+#!/bin/bash
+wget -U "$BROWSER" --no-check-certificate $@
+ 

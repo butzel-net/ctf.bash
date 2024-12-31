@@ -1,0 +1,4 @@
+#!/bin/bash
+max=${2:-7}
+curl -k "$1/robots.txt" && sleep 2
+wget -U $BROWSER -l $max -mkx -e robots=off "$1"

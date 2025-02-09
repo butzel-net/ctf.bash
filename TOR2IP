@@ -1,0 +1,10 @@
+#!/bin/bash
+# Redirect a localhost (127.0.0.1) port to a port on an onion server
+TOR=${3:-9050}
+if [ "$#" -gt 2 ]; then
+    echo "socat tcp4-listen:$2,reuseaddr,fork socks4A:127.0.0.1:$1,socksport=$TOR"
+    socat tcp4-listen:$2,reuseaddr,fork socks4A:127.0.0.1:$1,socksport=$TOR
+else
+   echo "usage $0 TARGET:PORT  LOCALPORT  <TORPORT>"
+   echo "      $0  somec00lservers.onion:80 4444 9050"
+fi 

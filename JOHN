@@ -1,0 +1,25 @@
+#!/bin/bash
+hash="$1"
+file=$(mktemp)
+fout=$(mktemp)
+user=$(date +%a%b%M%S)
+
+trap "rm -f $file $fout 2>/dev/null"  EXIT INT TERM
+echo "User: $user"
+echo "Hash: $hash"
+echo "$user:$hash" > $file
+if [[ -z "$2" ]] ; then
+    john "$file" ${@:2} | tee  $fout | grep --color=always -E ".*$user)|$"
+else
+    john --wordlist=$2 "$file" ${@:3} | tee $fout | grep --color=always -E ".*$user)|$"
+
+fi
+
+# already cracked??
+if [ -f "$fout" ]; then 
+ pass=$(cat $fout|grep Cracked |sed 's/.*(is in \(.*\)).*/\1/' )
+ if [ -f "$pass" ]; then 
+  cat $pass | grep --color=always $hash
+ fi
+fi
+# rm $file $fout

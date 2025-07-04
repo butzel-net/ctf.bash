@@ -4,7 +4,11 @@ conf=$(mktemp)
 proxySOCK=${1:-"socks4"}
 proxyIP=${2:-"127.0.0.1"}
 proxyPORT=${3:-"9050"}
-trap "rm -f $conf"  EXIT SIGINT SIGTERM
+# trap "rm -f $conf"  EXIT SIGINT SIGTERM
+if [[ $proxySOCK =~ ^[0-9]+$ ]]; then
+   #echo "$0 socks5 127.0.0.1  $proxySOCK ${@:2}"
+   $0 "socks5" "127.0.0.1" $proxySOCK ${@:2}
+else
 cat <<EOF >$conf
 strict_chain
 # proxy_dns 
@@ -23,4 +27,5 @@ EOF
         shift 3
     done
     proxychains -q -f $conf $@
+fi
 #rm -f $conf

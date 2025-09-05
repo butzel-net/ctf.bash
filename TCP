@@ -1,0 +1,11 @@
+#!/bin/bash
+if [[ $# -eq 3 ]]; then
+  if [[ $2 == *:* ]]; then
+    socat TCP-LISTEN:$1,fork,reuseaddr TCP6:[$2]:$3
+  else
+    socat TCP-LISTEN:$1,fork,reuseaddr TCP:$2:$3
+  fi
+else
+  echo "Redirect a localport to a remote port
+  echo -e "usage:\n $0 [listenport] [targetip] [targetport]"
+fi

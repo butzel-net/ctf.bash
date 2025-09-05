@@ -1,0 +1,13 @@
+#!/bin/bash
+if [ "$#" -lt 2 ]; then
+ echo "Loop a command for every line of a file"
+ echo -e "usage:\n $0 'command' data.file "
+ echo -e "usage:\n $0 'nc -vvzwn1 \$DATA 22 80 443 445 3389' listof.ips "
+else
+CMD="$1"
+SRC="$2"
+ while read DATA 
+  do
+    eval "$CMD"
+  done<$SRC
+fi

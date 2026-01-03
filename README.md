@@ -5,8 +5,6 @@ Because Aliases are not chainable.
 
 The advantage should result by pivoting (PROXY) and the fast use without having to re-enter recurring parameters.
 
-
-
 ## USAGE
  * BASE64 -> base64 with input parameter: `BASE64 <your_value_here>`
  * CURL -> no nagging about selfsigned certificates  ($BROWSER sets the User-Agent)
@@ -27,11 +25,14 @@ The advantage should result by pivoting (PROXY) and the fast use without having 
  * WGET -> no nagging about selfsigned certificates  ($BROWSER sets the User-Agent)
  * XCOM -> Serial Communictions via /dev/ttyUSB# or /dev/ttyACM#:  `XCOM <device-number> [BAUDRATE]`
 
-### Variables:
+## Variables:
   * `export BROWSER=<USER-AGENT-STRING>` for CURL, WGET, MIRROR
 
-#### Dependencies:
+### Dependencies:
 - Gentoo/Pentoo: 
   * `emerge -q net-misc/curl app-crypt/johntheripper net-misc/proxychains net-analyzer/netcat app-misc/screen net-misc/socat  net-misc/openssh net-misc/wget`
 - Debian based:
   * `apt install -y curl john proxychains4  netcat-traditional  screen socat openssh-client wget `
+
+### GUI-Starter
+ * FIREFOX -> start firefox with profile selection

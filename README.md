@@ -5,6 +5,15 @@ Because Aliases are not chainable.
 
 The advantage should result by pivoting (PROXY) and the fast use without having to re-enter recurring parameters.
 
+## Installation
+```
+mkdir -p $HOME/bin/
+rm README.md ; chmod +x *
+mv * $HOME/bin/.
+echo 'PATH="$HOME/bin:$PATH"' >> $HOME/.bashrc
+echo "export BROWSER='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0'"  >> $HOME/.bashrc
+```
+
 ## USAGE
  * BASE64 -> base64 with input parameter: `BASE64 <your_value_here>`
  * CURL -> no nagging about selfsigned certificates  ($BROWSER sets the User-Agent)

@@ -6,5 +6,5 @@ if [ "$#" -gt 2 ]; then
     socat tcp4-listen:$2,reuseaddr,fork socks4A:127.0.0.1:$1,socksport=$TOR
 else
    echo "usage $0 TARGET:PORT  LOCALPORT  <TORPORT>"
-   echo "      $0  somec00lservers.onion:80 4444 9050"
+   echo "      $0  somec00lservers.onion:80 4711 9050"
 fi 

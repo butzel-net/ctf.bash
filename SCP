@@ -1,4 +1,4 @@
 #!/bin/bash
 # Insecure, but usefull for old devices...
-
-SCP -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  $@
+#scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  $@
+scp -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -o IdentitiesOnly=yes -o IdentityAgent=none -o SendEnv="-" -o PreferredAuthentications=keyboard-interactive,publickey,password  $@

@@ -1,5 +1,4 @@
 #!/bin/bash
-
 TMUXSES=${1:-"default"}
 TMUXLST="$(tmux ls | cut -f1 -d: |sort -u)"
 
@@ -11,4 +10,3 @@ elif echo "$TMUXLST" | grep -qx "$TMUXSES"; then
 else
     tmux new -s "$TMUXSES"
 fi
-

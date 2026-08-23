@@ -2,11 +2,15 @@
 TMUXSES=${1:-"default"}
 TMUXLST="$(tmux ls | cut -f1 -d: |sort -u)"
 
-
 if [ $# -eq 0 ]; then
     tmux ls
 elif echo "$TMUXLST" | grep -qx "$TMUXSES"; then
     tmux a -t "$TMUXSES"
 else
-    tmux new -s "$TMUXSES"
+    if [ -f "$HOME/.tmux/sessions.py" ]; then
+        "$HOME/.tmux/sessions.py" "$TMUXSES"
+        tmux a -t "$TMUXSES"
+    else
+        tmux new -s "$TMUXSES"
+    fi
 fi

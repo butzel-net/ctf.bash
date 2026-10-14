@@ -1,0 +1,24 @@
+#!/bin/bash
+
+GW="$1"
+IP="$2"
+PORT="$3"
+
+if [[ $# -lt 2 || $# -gt 3 ]]; then
+    echo "Usage: $(basename "$0") <gateway> <ip> [port]"
+    exit 1
+fi
+
+ip -4 route add "$IP/32" via "$GW" || exit 1
+
+# Remove route on exit 
+trap 'ip -4 route del "$IP/32"' EXIT
+trap 'exit 130' INT   # [CTRL] + [C}
+trap 'exit 143' TERM  # kill 
+
+ping -c 2 "$IP"
+traceroute -nq1 "$IP"
+
+if [[ -n "$PORT" ]]; then
+    nc -vvznw 7 "$IP" "$PORT"
+fi

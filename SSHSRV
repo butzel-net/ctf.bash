@@ -53,12 +53,11 @@ if [[ -z "$CONF" ]]; then
     #trap 'rm -rf "$CONF"' EXIT ERR INT TERM
 fi
 
-
-
-# ----
 # Certificate
 if [[ -z "$CERT" ]]; then
     ssh-keygen -t ed25519   -f "$CONF/host.key"   -N ''
+else
+    cp "$CERT" "$CONF/host.key"
 fi
 
 # User Key?
@@ -78,7 +77,7 @@ fi
 
 echo "ssh-ed25519 $UKEY "                    >> "$CONF/akeys"
 chmod 644                                   "$CONF/akeys"
-
+chmod 600                                   "$CONF/host.key"
  # -- config
 cat <<EOF >"$CONF/sshsrv.conf"
 Port $PORT
@@ -89,6 +88,8 @@ PidFile $CONF/sshd.pid
 
 UsePAM no
 KbdInteractiveAuthentication no
+PasswordAuthentication no
+PubkeyAuthentication yes
 PermitRootLogin no
 AllowTcpForwarding no
 X11Forwarding no

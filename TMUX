@@ -4,7 +4,7 @@ TMUXLST="$(tmux ls 2>/dev/null | cut -f1 -d: |sort -u)"
 
 if [ $# -eq 0 ]; then
     tmux ls
-elif echo "$TMUXLST" | grep -qx "$TMUXSES"; then
+elif echo "$TMUXLST" | grep -Fqx "$TMUXSES"; then
     exec tmux a -t "$TMUXSES"
 else
     if [ -f "$HOME/.tmux/sessions.py" ]; then

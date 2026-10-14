@@ -2,5 +2,5 @@
 if [[ -f "$1" ]]; then
      xxd -p -c0 "$1"
 else
-    echo "$1" | xxd -p -c0 - 
+    echo -n "$1" | xxd -p -c0 - 
 fi

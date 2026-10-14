@@ -1,2 +1,7 @@
 #!/bin/bash
-curl -k -L -A "$BROWSER"  $@
+
+if [ -n "${BROWSER+x}" ]; then
+ exec curl -k -L -A "$BROWSER"  "$@"
+else
+ exec curl -k -L "$@"
+fi

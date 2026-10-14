@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ "$#" -eq 2 ]; then
-    socat OPENSSL:$1:$2,verify=0 - 
+    exec -a "$0" socat "OPENSSL:$1:$2,verify=0" - 
 else
     echo "try $(basename $0) <IP> <PORT>"
 fi

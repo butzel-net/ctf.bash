@@ -1,5 +1,5 @@
 #!/bin/bash
-echo $1
+echo "$1"
 echo "encode:"
 echo -n "$1" | base64 
 echo "decode:"

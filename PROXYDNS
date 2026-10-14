@@ -1,30 +1,31 @@
 #!/bin/bash
 CMD=$(basename "$0")
 conf=$(mktemp)
-proxySOCK=${1:-"socks4"}
+proxySOCK=${1:-"socks5"}
 proxyIP=${2:-"127.0.0.1"}
 proxyPORT=${3:-"9050"}
-# trap "rm -f $conf"  EXIT SIGINT SIGTERM
-if [[ $proxySOCK =~ ^[0-9]+$ ]]; then
-   #echo "$0 socks5 127.0.0.1  $proxySOCK ${@:2}"
-   $0 "socks5" "127.0.0.1" $proxySOCK ${@:2}
+
+
+trap 'rm -f "$conf"'  EXIT INT TERM
+if [[ "$proxySOCK" =~ ^[0-9]+$ ]]; then
+    "$0" "socks5" "127.0.0.1" "$proxySOCK" "${@:2}"
 else
-cat <<EOF >$conf
+    cat <<EOF >"$conf"
 strict_chain
 proxy_dns 
 remote_dns_subnet 224
 tcp_read_time_out 15000
 tcp_connect_time_out 8000
 [ProxyList]
- $proxySOCK $proxyIP $proxyPORT 
+$proxySOCK $proxyIP $proxyPORT 
 EOF
-#proxychains -q -f $conf  ${@:4}
-shift 3
-while [[ "$1" == "$CMD" ]];do
-    shift 1
-    echo " $1 $2 $3" >> $conf
     shift 3
-done
-proxychains -q -f $conf $@
+    while [[ "$1" == "$CMD" ]];do
+        shift 1
+        echo " $1 $2 $3" >> "$conf"
+        shift 3
+    done
+    proxychains -q -f "$conf" "$@"
 fi
-rm -f $conf
+#proxychains -q -f $conf  ${@:4}
+#rm -f $conf

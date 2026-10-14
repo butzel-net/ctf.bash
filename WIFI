@@ -1,3 +1,3 @@
 #!/bin/bash
 WIFI=${1:-wlan0}
-iwlist $WIFI scan | grep -A5 Cell | grep -E 'Cell|SSID' | sed 'N;s/\n */ /'| cut -f2- -d: 
+iwlist "$WIFI" scan | grep -A5 Cell | grep -E 'Cell|SSID' | sed 'N;s/\n */ /'| cut -f2- -d: 

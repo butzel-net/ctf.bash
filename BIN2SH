@@ -1,0 +1,10 @@
+#!/bin/bash
+
+FILE="$1"
+SIZE="${2:-24}"
+OUTF="${3:-$1}"
+
+C=0
+tmp=""
+while read HEX ;do C=$((C+1)); export tmp="$tmp\x$HEX"; f=$tmp; (( $C % $SIZE )) || echo "echo -en \"$tmp\" >> $OUTF" ; (( $C % $SIZE )) || tmp=''; done < <( xxd -p -c 1 "$FILE" ) 
+echo "echo -en \"$tmp\" >> $OUTF" 

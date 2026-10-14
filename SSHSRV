@@ -1,0 +1,113 @@
+#!/bin/bash
+
+PORT="2022"
+L_IP="0.0.0.0"
+UKEY=""
+CERT=""
+CONF=""
+## Paramter
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -p|--port)
+            PORT="$2"
+            shift 2
+            ;;
+        -i|--ip)
+            L_IP="$2"
+            shift 2
+            ;;
+        -c|--cert)
+            CERT="$2"
+            shift 2
+            ;;
+        -k|--key)
+            UKEY="$2"
+            shift 2
+            ;;
+        -w|--wdir)
+            WDIR="$2"
+            shift 2
+            ;;
+        -s|--sdir)
+            CONF="$2"
+            shift 2
+            ;;
+        *)
+            echo -e "# SSH-SRV (run a non-root  SSH-Server)   \n  -p | --port \t listening port"
+            echo -e "  -i | --ip   \t listening IP (optional)\n  -c | --cert \t hostkey-file (optional)"
+            echo -e "  -s | --sdir \t server-config dir (optional) \n  -w | --wdir  \t workdir (optional)  9"
+            echo -e "  -k | --key  \t public key for login \n "
+            echo
+            echo -e "\n## Linux\n ssh-keygen -q -t ed25519 -N '' -f key \n scp -P <port> -i key $USER@4.7.1.1:data .\n## Windows"
+            echo -e " ssh-keygen -q -t ed25519 -f C:\\path\\2\\key -N '\"\"'"
+            echo -e " icacls \"C:\\pfad\\2\\key\" /inheritance:r /grant:r \"\$\(\$env:USERNAME\):R\""
+            echo -e " scp -P <port> -i \"C:\\pfad\\2\\key\" user@host:ctf.exe . "
+            exit 0
+            ;;
+    esac
+done
+
+# tmp dir
+if [[ -z "$CONF" ]]; then
+    CONF=$(mktemp -d)
+    #trap 'rm -rf "$CONF"' EXIT ERR INT TERM
+fi
+
+
+
+# ----
+# Certificate
+if [[ -z "$CERT" ]]; then
+    ssh-keygen -t ed25519   -f "$CONF/host.key"   -N ''
+fi
+
+# User Key?
+if [[ -z "$UKEY" ]]; then
+    ssh-keygen -q -t ed25519 -N '' -f $CONF/key
+    UKEY="$(cat  $CONF/key.pub|cut -f2 -d\ )"
+    cat $CONF/key
+fi
+
+if [[ -n "$WDIR" ]] ; then
+    mkdir -p "$WDIR"
+    WDIR="-d $WDIR"
+else
+	mkdir -p "$CONF/pub"
+    WDIR="-d $CONF/pub"
+fi
+
+echo "ssh-ed25519 $UKEY "                    >> "$CONF/akeys"
+chmod 644                                   "$CONF/akeys"
+
+ # -- config
+cat <<EOF >"$CONF/sshsrv.conf"
+Port $PORT
+ListenAddress $L_IP
+
+HostKey $CONF/host.key
+PidFile $CONF/sshd.pid
+
+UsePAM no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+AllowTcpForwarding no
+X11Forwarding no
+StrictModes no
+LogLevel Info #Error
+Subsystem sftp internal-sftp
+AuthorizedKeysFile $CONF/akeys
+AllowUsers $USER
+
+Match User $USER
+    ForceCommand internal-sftp $WDIR
+    AllowTcpForwarding no
+    AllowAgentForwarding no
+    PermitTunnel no
+    DisableForwarding yes
+
+EOF
+
+cat  "$CONF/sshsrv.conf"
+echo ""
+echo ""
+$(which sshd)  -D -e -f "$CONF/sshsrv.conf" # >> /dev/null 2>&1 

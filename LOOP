@@ -6,8 +6,8 @@ if [ "$#" -lt 2 ]; then
 else
 CMD="$1"
 SRC="$2"
- while read DATA 
+ while read -r DATA 
   do
     eval "$CMD"
-  done<$SRC
+  done<"$SRC"
 fi

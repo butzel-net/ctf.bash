@@ -1,4 +1,10 @@
 #!/bin/bash
 max=${2:-7}
-curl -k "$1/robots.txt" && sleep 2
-wget -U $BROWSER -l $max -mkx -e robots=off "$1"
+
+if [ -n "${BROWSER:-}" ]; then
+    curl -k -A "$BROWSER" "$1/robots.txt" && sleep 2
+    exec -a "$0" wget -U "$BROWSER" -l "$max" --no-check-certificate -mkx -e robots=off "$1"
+else
+    curl -k "$1/robots.txt" && sleep 2
+    exec -a "$0" wget -l "$max" --no-check-certificate -mkx -e robots=off "$1"
+fi
